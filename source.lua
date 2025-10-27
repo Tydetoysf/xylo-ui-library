@@ -1,86 +1,63 @@
--- XyloUI: Custom Rebrand of Luxware
+local XyloUI = {}
+
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-local XyloUI = {}
-XyloUI.__index = XyloUI
+function XyloUI.CreateWindow(title, iconId)
+    local gui = Instance.new("ScreenGui", game.CoreGui)
+    gui.Name = "XyloUI"
+    gui.ResetOnSpawn = false
 
-function XyloUI.CreateWindow(title, logoId)
-    local screenGui = Instance.new("ScreenGui", game.CoreGui)
-    screenGui.Name = "XyloUI"
-    screenGui.ResetOnSpawn = false
+    local main = Instance.new("Frame", gui)
+    main.Size = UDim2.new(0, 600, 0, 400)
+    main.Position = UDim2.new(0.5, -300, 0.5, -200)
+    main.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    main.BorderSizePixel = 0
 
-    -- Main Frame
-    local mainFrame = Instance.new("Frame", screenGui)
-    mainFrame.Size = UDim2.new(0, 500, 0, 400)
-    mainFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-    mainFrame.BorderSizePixel = 0
+    local corner = Instance.new("UICorner", main)
+    corner.CornerRadius = UDim.new(0, 10)
 
-    local corner = Instance.new("UICorner", mainFrame)
-    corner.CornerRadius = UDim.new(0, 12)
+    local titleBar = Instance.new("TextLabel", main)
+    titleBar.Size = UDim2.new(1, 0, 0, 40)
+    titleBar.BackgroundTransparency = 1
+    titleBar.Text = title or "Control Suite"
+    titleBar.TextColor3 = Color3.fromRGB(220, 220, 220)
+    titleBar.Font = Enum.Font.GothamBold
+    titleBar.TextSize = 24
 
-    local stroke = Instance.new("UIStroke", mainFrame)
-    stroke.Color = Color3.fromRGB(0, 255, 120)
-    stroke.Thickness = 2
-
-    -- Logo
-    local logo = Instance.new("ImageLabel", mainFrame)
-    logo.Size = UDim2.new(0, 100, 0, 100)
-    logo.Position = UDim2.new(0.5, -50, 0, -60)
-    logo.BackgroundTransparency = 1
-    logo.Image = "rbxassetid://15661922687" -- Your custom XyloUI logo
-
-    -- Title
-    local titleLabel = Instance.new("TextLabel", mainFrame)
-    titleLabel.Size = UDim2.new(1, 0, 0, 40)
-    titleLabel.Position = UDim2.new(0, 0, 0, 10)
-    titleLabel.BackgroundTransparency = 1
-    titleLabel.Text = title or "XyloUI Control Suite"
-    titleLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-    titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextSize = 24
-
-    -- Tab Container
-    local tabContainer = Instance.new("Frame", mainFrame)
-    tabContainer.Size = UDim2.new(0, 120, 1, -60)
-    tabContainer.Position = UDim2.new(0, 0, 0, 60)
-    tabContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    local tabContainer = Instance.new("Frame", main)
+    tabContainer.Size = UDim2.new(0, 140, 1, -40)
+    tabContainer.Position = UDim2.new(0, 0, 0, 40)
+    tabContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     Instance.new("UICorner", tabContainer).CornerRadius = UDim.new(0, 8)
 
     local tabLayout = Instance.new("UIListLayout", tabContainer)
     tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
     tabLayout.Padding = UDim.new(0, 6)
 
-    -- Content Frame
-    local contentFrame = Instance.new("Frame", mainFrame)
-    contentFrame.Size = UDim2.new(1, -140, 1, -60)
-    contentFrame.Position = UDim2.new(0, 130, 0, 60)
-    contentFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+    local contentFrame = Instance.new("Frame", main)
+    contentFrame.Size = UDim2.new(1, -150, 1, -50)
+    contentFrame.Position = UDim2.new(0, 150, 0, 50)
+    contentFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
     Instance.new("UICorner", contentFrame).CornerRadius = UDim.new(0, 8)
-
-    local contentLayout = Instance.new("UIListLayout", contentFrame)
-    contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    contentLayout.Padding = UDim.new(0, 10)
 
     local tabs = {}
 
     function XyloUI:Tab(name)
         local tabButton = Instance.new("TextButton", tabContainer)
         tabButton.Size = UDim2.new(1, -10, 0, 30)
-        tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+        tabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
         tabButton.Text = name
         tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         tabButton.Font = Enum.Font.Gotham
         tabButton.TextSize = 16
         Instance.new("UICorner", tabButton).CornerRadius = UDim.new(0, 6)
 
-        local tabFrame = Instance.new("Frame")
+        local tabFrame = Instance.new("Frame", contentFrame)
         tabFrame.Size = UDim2.new(1, 0, 1, 0)
         tabFrame.BackgroundTransparency = 1
         tabFrame.Visible = false
-        tabFrame.Parent = contentFrame
 
         local layout = Instance.new("UIListLayout", tabFrame)
         layout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -89,10 +66,10 @@ function XyloUI.CreateWindow(title, logoId)
         tabButton.MouseButton1Click:Connect(function()
             for _, t in pairs(tabs) do
                 t.Frame.Visible = false
-                t.Button.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+                t.Button.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
             end
             tabFrame.Visible = true
-            tabButton.BackgroundColor3 = Color3.fromRGB(0, 255, 120)
+            tabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
         end)
 
         local tab = {
@@ -126,7 +103,7 @@ function XyloUI.CreateWindow(title, logoId)
                     button.TextColor3 = Color3.fromRGB(255, 255, 255)
                     button.Font = Enum.Font.Gotham
                     button.TextSize = 16
-                    button.BackgroundColor3 = Color3.fromRGB(180, 0, 255)
+                    button.BackgroundColor3 = Color3.fromRGB(80, 80, 90)
                     Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
                     button.MouseButton1Click:Connect(callback)
                 end
@@ -153,6 +130,7 @@ function XyloUI.CreateWindow(title, logoId)
             end
         }
 
+        tabFrame.Parent = contentFrame
         table.insert(tabs, tab)
         return tab
     end
